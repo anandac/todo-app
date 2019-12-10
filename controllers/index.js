@@ -34,23 +34,23 @@ module.exports = {
     res.send(subtask);
   },
 
-  // updateTodo: (req, res) => {
-  //   const task = tasks.find(t => t.id === parseInt(req.params.id));
-  //   if (!task) {
-  //     res.status(404).send("The task with the given ID not found");
-  //     return;
-  //   }
+  updateTodo: (req, res) => {
+    const task = tasks.find(t => t.id === parseInt(req.params.id));
+    if (!task) {
+      res.status(404).send("The task with the given ID not found");
+      return;
+    }
 
-  //   if (!req.body.title || req.body.title < 1) {
-  //     res
-  //       .status(400)
-  //       .send("Title unidentified or minimum of 1 char is required");
-  //     return;
-  //   }
+    if (!req.body.title || req.body.title < 1) {
+      res
+        .status(400)
+        .send("Title unidentified or minimum of 1 char is required");
+      return;
+    }
 
-  //   task.title = req.body.title;
-  //   res.send(task);
-  // },
+    task.title = req.body.title;
+    res.send(task);
+  },
 
   showTodo: async (req, res) => {
     const id = req.params.id;
