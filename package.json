@@ -17,7 +17,7 @@
     "joi": "^13.1.0",
     "mongodb": "^3.3.5",
     "mongoose": "^5.7.13",
-    "nodemon": "^2.0.1",
+    "nodemon": "^2.0.2",
     "safe-json-stringify": "^1.2.0"
   }
 }

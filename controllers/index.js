@@ -59,8 +59,10 @@ module.exports = {
   },
 
   deleteTodo: (req, res) => {
-    const _id = req.params.id;
-    var task = deleteTask(_id, "tasks");
+    console.info(req, res);
+    const id = req.params.id;
+    console.log(id);
+    var task = deleteTask(id, "tasks");
     res.send("Task deleted");
   },
 
@@ -111,6 +113,8 @@ async function findAll(collection) {
 async function deleteTask(id, collection) {
   var mongoUtil = require("./mongoDB");
   var db = await mongoUtil.connectDB();
-  const res = await db.collection(collection).deleteOne({ id: parseInt(id) });
+  var ObjectId = require("mongodb").ObjectId;
+  var o_id = new ObjectId(id);
+  const res = await db.collection(collection).findOneAndDelete({ _id: o_id });
   return res;
 }
