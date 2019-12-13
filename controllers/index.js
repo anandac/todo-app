@@ -34,21 +34,10 @@ module.exports = {
     res.send(subtask);
   },
 
-  updateTodo: (req, res) => {
-    const task = tasks.find(t => t.id === parseInt(req.params.id));
-    if (!task) {
-      res.status(404).send("The task with the given ID not found");
-      return;
-    }
-
-    if (!req.body.title || req.body.title < 1) {
-      res
-        .status(400)
-        .send("Title unidentified or minimum of 1 char is required");
-      return;
-    }
-
-    task.title = req.body.title;
+  updateTodo: async (req, res) => {
+    const id = req.params.id;
+    const title = req.body.title;
+    var task = await updateTask(id, title, "tasks");
     res.send(task);
   },
 
@@ -68,6 +57,14 @@ module.exports = {
 
   showAll: async (req, res) => {
     var task = await findAll("tasks");
+    res.send(task);
+  },
+
+  searchTodo: async (req, res) => {
+    var body = { ...body };
+    var title = body.title;
+    console.log(title);
+    var task = searchTask(title, "tasks");
     res.send(task);
   }
 };
@@ -116,5 +113,30 @@ async function deleteTask(id, collection) {
   var ObjectId = require("mongodb").ObjectId;
   var o_id = new ObjectId(id);
   const res = await db.collection(collection).findOneAndDelete({ _id: o_id });
+  return res;
+}
+
+async function updateTask(id, title, collection) {
+  var mongoUtil = require("./mongoDB");
+  var db = await mongoUtil.connectDB();
+  var ObjectId = require("mongodb").ObjectId;
+  var o_id = new ObjectId(id);
+  var title = title;
+  const res = await db
+    .collection(collection)
+    .findOneAndUpdate({ _id: o_id }, { $set: { title: title } });
+  return res;
+}
+
+async function searchTask(title, collection) {
+  var mongoUtil = require("./mongoDB");
+  var db = await mongoUtil.connectDB();
+  console.log(title);
+  const res = await db
+    .collection(collection)
+    .find({ title: title }, function(err, data) {
+      if (err) console.error(err);
+      // console.log("hyhjghgj", data);
+    });
   return res;
 }
